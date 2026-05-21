@@ -15,9 +15,10 @@ RUN ln -sf /usr/bin/g++-10 /usr/bin/g++
 RUN git config --global http.postBuffer 1048576000
 # RUN git clone https://github.com/Zihao-Ding/pl-mab-hypre.git --branch develop-mab-hypre
 
-RUN echo "nameserver 8.8.8.8" > /etc/resolv.conf && \
-    echo "nameserver 8.8.4.4" >> /etc/resolv.conf && \
-    git clone https://github.com/Zihao-Ding/pl-mab-hypre.git --branch develop-mab-hypre
+# RUN echo "nameserver 8.8.8.8" > /etc/resolv.conf && \
+#     echo "nameserver 8.8.4.4" >> /etc/resolv.conf && \
+#     git clone https://github.com/Zihao-Ding/pl-mab-hypre.git --branch develop-mab-hypre
+RUN git clone https://github.com/Zihao-Ding/pl-mab-hypre.git --branch develop-mab-hypre-cloud
 
 # RUN mkdir /pl-mab-hypre
 # COPY --chown=ecs-user pl-mab-hypre-develop-mab-hypre /pl-mab-hypre
@@ -32,7 +33,8 @@ RUN make -j $(nproc)
 
 WORKDIR /
 
-COPY --chown=ecs-user run_solver.sh /
+# COPY --chown=ecs-user run_solver.sh /
+RUN cp /pl-mab-hypre/run_solver.sh /
 RUN chmod +x /run_solver.sh
 
 RUN cp /pl-mab-hypre/build/release/painless_release /painless_release
