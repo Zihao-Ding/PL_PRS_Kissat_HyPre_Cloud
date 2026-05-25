@@ -14,12 +14,12 @@ from common.solver_io import SolverInput, SolverResultCode
 
 
 def get_run_command(s_input: SolverInput) -> List[str]:
-    # Create the hostfile
+    # Create a hostfile with all node IPs
     all_ips = [s_input.node_ip] + s_input.worker_node_ips
-    hostfile_path = s_input.run_dir / "combined_hostfile.txt"
-    with open(hostfile_path, "w+") as f:
+    hostfile_path = s_input.run_dir / "hostfile.txt"
+    with open(hostfile_path, 'w') as f:
         for ip in all_ips:
-            f.write(f"{ip} slots=1\n")  # distributed default
+            f.write(f'{ip} slots=1\n')
 
     # cmd = ["/run_solver.sh", str(hostfile_path), str(s_input.formula_file)]
     # cmd = ["/run_solver.sh", str(s_input.formula_file)]
@@ -44,7 +44,7 @@ def get_solver_result(stdout_path: Path) -> SolverResultCode:
     #     return 0
 
     if stdout_path.exists():
-        with open(stdout_path, "r") as f:
+        with open(stdout_path, "r", encoding="utf-8", errors="replace") as f:
             lines = f.readlines()
 
         for line in lines:
@@ -61,5 +61,5 @@ def get_solver_result(stdout_path: Path) -> SolverResultCode:
 
 # For distributed solvers only; ignored by parallel solvers
 def get_cleanup_command() -> List[str]:
-    cmd = ["echo", "PLEASE", "IMPLEMENT", "ME"]
+    cmd = ["pkill", "-f", "painless_release"]
     return cmd
